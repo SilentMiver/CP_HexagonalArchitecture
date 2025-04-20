@@ -10,7 +10,6 @@ import fastfood.domain.port.secondary.SupplierNotificationService;
 import fastfood.domain.port.secondary.SupplyOrderRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public class SupplyOrderService implements SupplyOrderManagementUseCase {
     private final SupplyOrderRepository repository;
@@ -32,6 +31,11 @@ public class SupplyOrderService implements SupplyOrderManagementUseCase {
     @Override
     public String createSupplyOrder(String supplierId) {
         List<Product> products = forecastService.getForecast();
+        return createSupplyOrder(supplierId, products);
+    }
+
+    @Override
+    public String createSupplyOrder(String supplierId, List<Product> products) {
         SupplyOrder order = new SupplyOrder(supplierId, products);
         repository.save(order);
         return order.getId();
@@ -89,6 +93,6 @@ public class SupplyOrderService implements SupplyOrderManagementUseCase {
 
     private SupplyOrder getOrderOrThrow(String orderId) {
         return repository.findById(orderId)
-                .orElseThrow (() -> new IllegalArgumentException("Order not found: " + orderId));
+                .orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderId));
     }
 }
